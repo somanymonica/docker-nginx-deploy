@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  basic-nginx:
+    image: nginx:1.21.6
+    restart: always
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      - ./log:/var/log/nginx
+      - ./dist:/usr/share/nginx/html
+    ports:
+      - "80:80"
