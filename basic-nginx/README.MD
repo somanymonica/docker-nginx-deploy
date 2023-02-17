@@ -104,3 +104,25 @@
    docker compose restart
    ```
 5. 预期结果：浏览器打开`http://a.xxx.com/web1/`能看到页面。
+
+#### 2.2 前端项目 web2
+
+1. 创建 web2 项目并打包
+2. 将静态文件复制到 nginx 的目录`/usr/share/nginx/html`，也就是`/docker-nginx-deploy/basic-nginx/dist`
+   ```
+   cd site-a
+   cp -r /docker-nginx-deploy/a.xxx.com/web2/build web2
+   ```
+3. 在配置文件`a.xxx.com.conf`中新增 location 转发
+   ```
+   location /web2 {
+        alias   /usr/share/nginx/html/;
+        index  site-a/web2/index.html;
+    }
+   ```
+4. 重启 basic-nginx 服务
+   ```
+   cd /docker-nginx-deploy/basic-nginx
+   docker compose restart
+   ```
+5. 预期结果：浏览器打开`http://a.xxx.com/web2/`能看到页面。
