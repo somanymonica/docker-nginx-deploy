@@ -51,3 +51,56 @@
    docker compose up -d
    ```
 4. 成功预期：浏览器在`http://localhost`可以看到 Nginx 服务已开启。
+
+### 2. a.xxx.com 项目
+
+1. 创建静态文件目录
+   ```
+   cd /docker-nginx-deploy/basic-nginx/dist
+   mkdir site-a
+   ```
+2. 创建 nginx 配置文件
+   ```
+   cd /docker-nginx-deploy/basic-nginx/conf.d
+   touch a.xxx.com.conf
+   ```
+3. 基础配置文件`/docker-nginx-deploy/basic-nginx/conf.d/a.xxx.com.conf`
+
+   ```
+   server {
+        listen       80;
+        server_name  a.xxx.com;
+
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
+   ```
+
+#### 2.1 前端项目 web1
+
+1. 创建 web1 项目并打包
+2. 将静态文件复制到 nginx 的目录`/usr/share/nginx/html`，也就是`/docker-nginx-deploy/basic-nginx/dist`
+   ```
+   cd site-a
+   cp -r /docker-nginx-deploy/a.xxx.com/web1/build web1
+   ```
+3. 在配置文件`a.xxx.com.conf`中新增 location 转发
+   ```
+   location /web1 {
+        alias   /usr/share/nginx/html/;
+        index  site-a/web1/index.html;
+    }
+   ```
+4. 重启 basic-nginx 服务
+   ```
+   cd /docker-nginx-deploy/basic-nginx
+   docker compose restart
+   ```
+5. 预期结果：浏览器打开`http://a.xxx.com/web1/`能看到页面。

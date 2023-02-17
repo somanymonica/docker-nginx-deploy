@@ -41,5 +41,5 @@
    ```
 3. 创建一个公共的网络用于 Nginx 代理与其他服务沟通
    ```
-   $ docker network create proxy-network
+   docker network create proxy-network
    ```
