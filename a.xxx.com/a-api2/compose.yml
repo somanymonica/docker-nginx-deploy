@@ -1,0 +1,12 @@
+services:
+  sitea-api2:
+    build: .
+    stop_signal: SIGINT
+    # ports 用于在未使用basic-nginx转发时测试
+    # ports:
+    #   - "8000:8000"
+
+networks:
+  default:
+    name: proxy-network
+    external: true

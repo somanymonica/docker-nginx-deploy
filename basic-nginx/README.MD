@@ -146,3 +146,23 @@
    docker compose restart
    ```
 5. 预期结果：浏览器打开`http://a.xxx.com/api1/`能看到页面。
+
+#### 2.4 Flask 后端项目 api2
+
+1. 创建 a-api2 项目，并运行该项目容器
+2. 新增`/docker-nginx-deploy/basic-nginx/compose.yml`中的外部网络
+   - 便于在配置中使用 hostname
+3. 在配置文件`a.xxx.com.conf`中新增 location 转发
+   ```
+   # 1. 注意后端转发路径末尾/
+   # 2. 通过docker network可以使用在/docker-nginx-deploy/a.xxx.com/a-api2/compose.yml 中定义的服务名代替IP
+   location /api2 {
+        proxy_pass http://sitea-api2:8000/;
+    }
+   ```
+4. 重启 basic-nginx 服务
+   ```
+   cd /docker-nginx-deploy/basic-nginx
+   docker compose restart
+   ```
+5. 预期结果：浏览器打开`http://a.xxx.com/api2/`能看到页面。
