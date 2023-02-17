@@ -166,3 +166,52 @@
    docker compose restart
    ```
 5. 预期结果：浏览器打开`http://a.xxx.com/api2/`能看到页面。
+
+### 3. b.xxx.com 项目
+
+1. 创建项目目录
+   ```
+   cd /docker-nginx-deploy
+   mkdir b.xxx.com
+   ```
+2. 创建 nginx 配置文件
+   ```
+   cd /docker-nginx-deploy/basic-nginx/conf.d
+   touch b.xxx.com.conf
+   ```
+3. 基础配置文件`/docker-nginx-deploy/basic-nginx/conf.d/b.xxx.com.conf`
+
+   ```
+   server {
+      listen       80;
+      server_name  b.xxx.com;
+
+      location / {
+         root   /usr/share/nginx/html;
+         index  index.html;
+      }
+
+      error_page   500 502 503 504  /50x.html;
+      location = /50x.html {
+         root   /usr/share/nginx/html;
+      }
+   }
+   ```
+
+#### 3.1 后端项目 Project2
+
+1. 创建 project2 项目，并运行该项目容器
+2. 在配置文件`b.xxx.com.conf`中新增 location 转发
+   ```
+   # 1. 注意后端转发路径末尾/
+   # 2. 通过docker network可以使用在/docker-nginx-deploy/a.xxx.com/a-api2/compose.yml 中定义的服务名代替IP
+   location /project2 {
+        proxy_pass http://siteb-backend:8000/;
+    }
+   ```
+3. 重启 basic-nginx 服务
+   ```
+   cd /docker-nginx-deploy/basic-nginx
+   docker compose restart
+   ```
+4. 预期结果：浏览器打开`http://b.xxx.com/project2/`能看到页面。
