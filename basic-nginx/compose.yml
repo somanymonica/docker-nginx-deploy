@@ -10,3 +10,8 @@ services:
       - ./dist:/usr/share/nginx/html
     ports:
       - "80:80"
+
+networks:
+  default:
+    name: proxy-network
+    external: true
