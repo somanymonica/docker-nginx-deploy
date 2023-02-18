@@ -45,3 +45,5 @@
    ```
 
 ## 网络关系
+
+![image](https://github.com/somanymonica/docker-nginx-deploy/blob/main/network.jpg)
