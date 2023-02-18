@@ -204,9 +204,8 @@
 2. 在配置文件`b.xxx.com.conf`中新增 location 转发
    ```
    # 1. 注意后端转发路径末尾/
-   # 2. 通过docker network可以使用在/docker-nginx-deploy/a.xxx.com/a-api2/compose.yml 中定义的服务名代替IP
    location /project2 {
-        proxy_pass http://siteb-backend:8000/;
+        proxy_pass http://siteb-p2-backend:8000/;
     }
    ```
 3. 重启 basic-nginx 服务
@@ -215,3 +214,50 @@
    docker compose restart
    ```
 4. 预期结果：浏览器打开`http://b.xxx.com/project2/`能看到页面。
+
+#### 3.2 全栈项目 Project3
+
+1. 前端项目
+
+   1. 创建静态文件目录
+
+   ```
+   cd /docker-nginx-deploy/basic-nginx/dist
+   mkdir -p site-b/project3
+   ```
+
+   2. 将静态文件复制到 nginx 的目录
+
+   ```
+   cd site-b/project3
+   cp -r /docker-nginx-deploy/b.xxx.com/project3/frontend/build frontend
+   ```
+
+   4. Nginx 转发前端项目
+
+   ```
+   location /project3 {
+        alias   /usr/share/nginx/html/site-b/project3;
+        index  frontend/index.html;
+    }
+   ```
+
+2. nginx 转发后端服务
+   1. 运行 project3 服务
+      ```
+      cd /docker-nginx-deploy/b.xxx.com/project3
+      docker compose up -d
+      ```
+   2. 在配置文件`b.xxx.com.conf`中新增 project3 后端服务 location 转发
+      ```
+      # 1. 注意后端转发路径末尾/
+      location /api/ {
+         proxy_pass http://siteb-p3-backend:8001/;
+      }
+      ```
+3. 重启 basic-nginx 服务
+   ```
+   cd /docker-nginx-deploy/basic-nginx
+   docker compose restart
+   ```
+4. 预期结果：浏览器打开`http://b.xxx.com/project3/`能看到页面。

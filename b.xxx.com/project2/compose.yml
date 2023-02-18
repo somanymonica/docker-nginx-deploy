@@ -13,7 +13,7 @@ services:
       - MYSQL_DATABASE=example
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
 
-  siteb-backend:
+  siteb-p2-backend:
     build:
       context: backend
     restart: always
